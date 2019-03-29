@@ -21,7 +21,9 @@ while(True):
     green_mask = cv2.inRange(frame_hsv, l_green, u_green)               # The mask
     cv2.imshow('Green Mask', green_mask)
 
-
+    kernel = np.ones((5, 5), np.uint8)
+    no_noise = cv2.erode(green_mask, kernel, iterations = 1)           # Noise Removal
+    cv2. imshow('No Noise', no_noise)
 
 cap.release()
 cv2.destroyAllWindows()
