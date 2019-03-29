@@ -1,7 +1,6 @@
 import numpy as np
 import cv2
 import imutils
-import pyautogui
 
 cap = cv2.VideoCapture(0)
  
