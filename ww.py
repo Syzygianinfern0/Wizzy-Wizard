@@ -21,9 +21,14 @@ while(True):
     green_mask = cv2.inRange(frame_hsv, l_green, u_green)               # The mask
     cv2.imshow('Green Mask', green_mask)
 
+    # Noise Removal
+
     kernel = np.ones((5, 5), np.uint8)
     no_noise = cv2.erode(green_mask, kernel, iterations = 1)           # Noise Removal
     cv2. imshow('No Noise', no_noise)
+
+    opening = cv2.morphologyEx(no_noise, cv2.MORPH_OPEN, kernel)       # Morphing to enhance it
+    cv2. imshow('opening', opening)
 
 cap.release()
 cv2.destroyAllWindows()
