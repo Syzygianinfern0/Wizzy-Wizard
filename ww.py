@@ -1,14 +1,18 @@
 import numpy as np
 import cv2
 import imutils
+import pyautogui 
+import time
 
+flag = 0
 cap = cv2.VideoCapture(0)
  
 while(True):
     # Reading the video
 
     ret, frame = cap.read()
-    #cv2.imshow('ORIGINAL', frame)
+    frame = cv2.flip(frame, 1)
+    cv2.imshow('ORIGINAL', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):                               # The quit line
         break
     
@@ -44,5 +48,18 @@ while(True):
     
     # show the image
     cv2.imshow("Perfect", perfect)
+    
+    draw_x = int(cX * 1920 / 640)
+    draw_y = int(cY * 1080 / 480)
+    print(draw_x, draw_y)
+
+    # Draw the Thing For Papa
+    if flag == 0:
+        time.sleep(5) 
+        flag = 1
+    pyautogui.dragTo(draw_x, draw_y)
+
+    
+
 cap.release()
 cv2.destroyAllWindows()
