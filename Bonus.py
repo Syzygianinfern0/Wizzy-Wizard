@@ -1,12 +1,8 @@
-import time
 import cv2
 import imutils
 import numpy as np
-import pyautogui
-
 
 def main():
-    flag = 0
     cap = cv2.VideoCapture(0)
     screenCnt = []
     while True:
@@ -51,11 +47,28 @@ def main():
                 screenCnt = approx
                 break
                 
-
         cv2.drawContours(frame, [screenCnt], -1, (0, 255, 0), 2)    
-
         cv2.imshow('ORIGINAL', frame)
 
+        # Get the image
+
+        img = cv2.imread('Pic.jpg')
+        rows, cols, _ = img.shape
+
+        top_left_x, top_left_y = screenCnt[1][0][0], screenCnt[1][0][1]
+        top_right_x, top_right_y = screenCnt[0][0][0], screenCnt[0][0][1]
+        bottom_left_x, bottom_left_y = screenCnt[2][0][0], screenCnt[2][0][1]
+
+        pts1 = np.float32([[0, 0], [0, 163], [310, 0]])             #  3 points of the image
+        pts2 = np.float32([[top_left_x, top_left_y], [top_right_x, top_right_y], [bottom_left_x, bottom_left_y]])    # To map to corr coordintes of cam feed
+
+        M = cv2.getAffineTransform(pts1, pts2)
+        dst = cv2.warpAffine(img, M, (cols, rows))
+
+
+        finished = cv2.addWeighted(dst, 0.5, frame, 0.5, 0)
+
+        cv2. imshow('Finished', finished)
         if cv2.waitKey(1) & 0xFF == ord('q'):                               # The quit line
             break
 
