@@ -61,18 +61,28 @@ def main():
         bottom_right_x, bottom_right_y = screenCnt[3][0][0], screenCnt[3][0][1]
 
 
-        pts1 = np.float32([[640, 0], [0, 0], [640, 480], [0, 480]])             #  3 points of the image Note the mirror flip in the beginning
-        pts2 = np.float32([[top_left_x, top_left_y], [top_right_x, top_right_y], [bottom_left_x, bottom_left_y], [bottom_right_x, bottom_right_y]])    # To map to corr coordintes of cam feed
-
+        # pts1 = np.float32([[640, 0], [0, 0], [640, 480], [0, 480]])             #  4 points of the image Note the mirror flip in the beginning
+        # pts2 = np.float32([[top_left_x, top_left_y], [top_right_x, top_right_y], [bottom_left_x, bottom_left_y], [bottom_right_x, bottom_right_y]])    # To map to corr coordintes of cam feed
+        pts1 = np.float32([[640, 480], [640, 0], [0, 480], [0, 0]])             #  4 points of the image Note the mirror flip in the beginning
+        pts2 = np.float32([[top_left_x, top_left_y], [top_right_x, top_right_y], [bottom_left_x, bottom_left_y], [bottom_right_x, bottom_right_y]])    # To map to corr coordintes of cam feed        
+        
         M, _ = cv2.findHomography(pts1, pts2)
-        dst = cv2.warpPerspective(img, M, (cols, rows))
+        dst = cv2.warpPerspective(img, M, (cols, rows))                     # Rectangular to Trapezoidal
 
         cv2.imshow('dst', dst)
 
-        white_rem_mask = cv2.bitwise_not(mask)
-        mask_rem_feed = frame * cv2.cvtColor(white_rem_mask, cv2.COLOR_GRAY2RGB)
+        # white_rem_mask = cv2.bitwise_not(mask)
+        # mask_rem_feed = cv2.bitwise_and(frame, white_rem_mask)
 
-        finished = cv2.bitwise_or(mask_rem_feed, dst)
+        # cv2.polylines(frame, screenCnt, True, (0, 0, 0))
+        cv2.fillPoly(frame, [screenCnt], (0, 0, 0))
+
+        cv2.imshow('ORIGINAL', frame)
+
+        
+
+
+        finished = cv2.bitwise_or(frame, dst)
 
         cv2. imshow('Finished', finished)
         if cv2.waitKey(1) & 0xFF == ord('q'):                               # The quit line
