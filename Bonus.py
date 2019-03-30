@@ -18,6 +18,8 @@ def main():
         blurred_frame = cv2.GaussianBlur(frame, (5, 5), 0)          # Blurrd
         hsv = cv2.cvtColor(blurred_frame, cv2.COLOR_BGR2HSV)
 
+        # Finding Whites
+
         sensitivity = 120
         lower_white = np.array([0,0,255-sensitivity])
         upper_white = np.array([255,sensitivity,255])
@@ -32,24 +34,25 @@ def main():
 
         perfect = cv2.morphologyEx(no_noise, cv2.MORPH_OPEN, kernel)                            # Morphing to enhance
         
+        # Getting Contours
+
         cnts = cv2.findContours(perfect.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)     # find contours in the thresholded image
         cnts = imutils.grab_contours(cnts)
 
-        cnts = sorted(cnts, key = cv2.contourArea, reverse = True)[:2]
+        cnts = sorted(cnts, key = cv2.contourArea, reverse = True)[:2]                          # Taking the 3 largest contours
+
+        # Finding Rectangles
 
         for c in cnts:
             peri = cv2.arcLength(c, True)
-            approx = cv2.approxPolyDP(c, 0.1 * peri, True)
+            approx = cv2.approxPolyDP(c, 0.1 * peri, True)          # Applying DP algo to make a rectangle
 
-            if len(approx) == 4:
-                print('something')
+            if len(approx) == 4:                                    # Checking for rectangle
                 screenCnt = approx
-                cv2.drawContours(frame, [screenCnt], -1, (0, 255, 0), 2)    
                 break
                 
 
-        # cv2.drawContours(frame, screenCnt, -1, (0, 255, 0), 2)    
-        # cv2.drawContours(frame, approx, -1, (0, 255, 0), 2)    
+        cv2.drawContours(frame, [screenCnt], -1, (0, 255, 0), 2)    
 
         cv2.imshow('ORIGINAL', frame)
 
