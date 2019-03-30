@@ -1,8 +1,10 @@
-import numpy as np
+import time
+
 import cv2
 import imutils
-import pyautogui 
-import time
+import numpy as np
+import pyautogui
+
 
 def main():
     flag = 0
@@ -11,7 +13,7 @@ def main():
     while(True):
         # Reading the video
 
-        ret, frame = cap.read()
+        _, frame = cap.read()
         frame = cv2.flip(frame, 1)
         cv2.imshow('ORIGINAL', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):                               # The quit line
@@ -37,7 +39,7 @@ def main():
         #cv2. imshow('Green', perfect)
 
     
-        cnts = cv2.findContours(perfect.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)   # find contours in the thresholded image
+        cnts = cv2.findContours(perfect.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)   # find contours in the thresholded image
         cnts = imutils.grab_contours(cnts)
         
         for c in cnts:
