@@ -4,62 +4,65 @@ import imutils
 import pyautogui 
 import time
 
-flag = 0
-cap = cv2.VideoCapture(0)
- 
-while(True):
-    # Reading the video
-
-    ret, frame = cap.read()
-    frame = cv2.flip(frame, 1)
-    cv2.imshow('ORIGINAL', frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):                               # The quit line
-        break
+def main():
+    flag = 0
+    cap = cv2.VideoCapture(0)
     
-    # Mask to find the colour
+    while(True):
+        # Reading the video
 
-    frame_hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)                  # The convertion 
-    #cv2.imshow('HSV', frame_hsv)
+        ret, frame = cap.read()
+        frame = cv2.flip(frame, 1)
+        cv2.imshow('ORIGINAL', frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):                               # The quit line
+            break
+        
+        # Mask to find the colour
 
-    l_green = np.array([40, 40, 40])
-    u_green = np.array([70, 255, 255])
-    green_mask = cv2.inRange(frame_hsv, l_green, u_green)               # The mask
-    #cv2.imshow('Green Mask', green_mask)
+        frame_hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)                  # The convertion 
+        #cv2.imshow('HSV', frame_hsv)
 
-    # Noise Removal
+        l_green = np.array([40, 40, 40])
+        u_green = np.array([70, 255, 255])
+        green_mask = cv2.inRange(frame_hsv, l_green, u_green)               # The mask
+        #cv2.imshow('Green Mask', green_mask)
 
-    kernel = np.ones((5, 5), np.uint8)
-    no_noise = cv2.erode(green_mask, kernel, iterations = 1)           # Noise Removal
-    #cv2. imshow('No Noise', no_noise)
+        # Noise Removal
 
-    perfect = cv2.morphologyEx(no_noise, cv2.MORPH_OPEN, kernel)       # Morphing to enhance
-    #cv2. imshow('Green', perfect)
+        kernel = np.ones((5, 5), np.uint8)
+        no_noise = cv2.erode(green_mask, kernel, iterations = 1)           # Noise Removal
+        #cv2. imshow('No Noise', no_noise)
 
-   
-    cnts = cv2.findContours(perfect.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)   # find contours in the thresholded image
-    cnts = imutils.grab_contours(cnts)
-    
-    for c in cnts:
-        M = cv2.moments(c)                                              # compute the center of the contour
-        cX = int(M["m10"] / M["m00"])
-        cY = int(M["m01"] / M["m00"])
-
-        cv2.circle(perfect, (cX, cY), 7, (0, 255, 0), -1)               # Draw a circle for test
-    
-    # show the image
-    cv2.imshow("Perfect", perfect)
-    
-    draw_x = int(cX * 1920 / 640)
-    draw_y = int(cY * 1080 / 480)
-    print(draw_x, draw_y)
-
-    # Draw the Thing For Papa
-    if flag == 0:
-        time.sleep(5) 
-        flag = 1
-    pyautogui.dragTo(draw_x, draw_y)
+        perfect = cv2.morphologyEx(no_noise, cv2.MORPH_OPEN, kernel)       # Morphing to enhance
+        #cv2. imshow('Green', perfect)
 
     
+        cnts = cv2.findContours(perfect.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)   # find contours in the thresholded image
+        cnts = imutils.grab_contours(cnts)
+        
+        for c in cnts:
+            M = cv2.moments(c)                                              # compute the center of the contour
+            cX = int(M["m10"] / M["m00"])
+            cY = int(M["m01"] / M["m00"])
 
-cap.release()
-cv2.destroyAllWindows()
+            cv2.circle(perfect, (cX, cY), 7, (0, 255, 0), -1)               # Draw a circle for test
+        
+        # show the image
+        cv2.imshow("Perfect", perfect)
+        
+        draw_x = int(cX * 1920 / 640)
+        draw_y = int(cY * 1080 / 480)
+        print(draw_x, draw_y)
+
+        # Draw the Thing For Papa
+        if flag == 0:
+            time.sleep(5) 
+            flag = 1
+        pyautogui.dragTo(draw_x, draw_y)
+
+        
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+main()
