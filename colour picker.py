@@ -8,8 +8,8 @@ cap = cv2.VideoCapture(0)
 
 panel = np.zeros([30, 700], np.uint8)
 cv2.namedWindow('Slider')
-cv2.createTrackbar('Hue', 'Slider', 128, 255, nothing)
 cv2.createTrackbar('Sat', 'Slider', 128, 255, nothing)
+cv2.createTrackbar('Hue', 'Slider', 128, 255, nothing)
 cv2.createTrackbar('Val', 'Slider', 128, 255, nothing)
 cv2.createTrackbar('Sen', 'Slider', 100, 255, nothing)
 
