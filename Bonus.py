@@ -1,3 +1,9 @@
+# I get a video call from an old friend I met in art class. He asks me about
+# my new art work. I Use my coding skills to trick him by just placing a green
+# coloured sheet in front of the camera which will appear to him like an art
+# work that I downloaded as an image from the internet.
+
+
 import cv2
 import imutils
 import numpy as np
@@ -8,7 +14,11 @@ def main():
     while True:
         # Reading the video
 
-        _, frame = cap.read()
+        r, frame = cap.read()
+        print (r)
+        if not r:
+            continue
+
         frame = cv2.flip(frame, 1)                                  # Flip for mirror
         
         blurred_frame = cv2.GaussianBlur(frame, (5, 5), 0)          # Blurrd
